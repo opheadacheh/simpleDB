@@ -3,6 +3,7 @@ package simpledb;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.*;   //Add this because I wanna use ArrayList
 
 /**
  * Tuple maintains information about the contents of a tuple. Tuples have a
@@ -20,8 +21,16 @@ public class Tuple implements Serializable {
      *            the schema of this tuple. It must be a valid TupleDesc
      *            instance with at least one field.
      */
+    private TupleDesc Desc;
+    private RecordId Rid;
+    private ArrayList<Field> TupleFields;
+
     public Tuple(TupleDesc td) {
         // some code goes here
+        TupleFields = new ArrayList<Field>();
+        for (int i = 0; i < td.numFields(); i++)
+            TupleFields.add(null);
+        Desc = td;
     }
 
     /**
@@ -29,7 +38,7 @@ public class Tuple implements Serializable {
      */
     public TupleDesc getTupleDesc() {
         // some code goes here
-        return null;
+        return Desc;
     }
 
     /**
@@ -38,7 +47,7 @@ public class Tuple implements Serializable {
      */
     public RecordId getRecordId() {
         // some code goes here
-        return null;
+        return Rid;
     }
 
     /**
@@ -49,6 +58,7 @@ public class Tuple implements Serializable {
      */
     public void setRecordId(RecordId rid) {
         // some code goes here
+        Rid = rid;
     }
 
     /**
@@ -61,6 +71,7 @@ public class Tuple implements Serializable {
      */
     public void setField(int i, Field f) {
         // some code goes here
+        TupleFields.set(i, f);
     }
 
     /**
@@ -71,7 +82,7 @@ public class Tuple implements Serializable {
      */
     public Field getField(int i) {
         // some code goes here
-        return null;
+        return TupleFields.get(i);
     }
 
     /**
@@ -84,9 +95,19 @@ public class Tuple implements Serializable {
      */
     public String toString() {
         // some code goes here
-        throw new UnsupportedOperationException("Implement this");
+        String ans="";
+        Iterator<Field> itr = this.fields();
+        while (itr.hasNext()){
+            ans += itr.next().toString();
+            if (itr.hasNext()){
+                ans += "\t";
+            }else{
+                ans += "\n";
+            }
+        }
+        return ans;
     }
-    
+
     /**
      * @return
      *        An iterator which iterates over all the fields of this tuple
@@ -94,6 +115,6 @@ public class Tuple implements Serializable {
     public Iterator<Field> fields()
     {
         // some code goes here
-        return null;
+        return TupleFields.iterator();
     }
 }

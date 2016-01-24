@@ -143,9 +143,9 @@ public class TupleDesc implements Serializable {
         while (itr.hasNext()){
             TDItem now;
             now = itr.next();
+            i++;
             if (now.fieldName.equals(name))
                 return i;
-            i++;
         }
         throw new NoSuchElementException("No name-matched field");
     }
@@ -161,7 +161,7 @@ public class TupleDesc implements Serializable {
         while (itr.hasNext()){
             totalsize += itr.next().fieldType.getLen();
         }
-        return totalsize;
+        return 0;
     }
 
     /**
@@ -176,23 +176,20 @@ public class TupleDesc implements Serializable {
      */
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
         // some code goes here
-        int totalsize = td1.numFields() + td2.numFields(), i = 0;
+        int totalsize = td1.numFields() + td2.numFields(), size1 = td1.numFields(), i=0;
         Type[] TypeAr = new Type[totalsize];
         String[] NameAr = new String[totalsize];
         Iterator<TDItem> itr1 = td1.iterator(), itr2 = td2.iterator();
         while (itr1.hasNext()){
-            TDItem x = itr1.next();
-            TypeAr[i] = x.fieldType;
-            NameAr[i] = x.fieldName;
-            i++;
+            TypeAr[i] = itr1.next().fieldType;
+            NameAr[i++] = itr1.next().fieldName;
         }
         while (itr2.hasNext()){
-            TDItem x = itr2.next();
-            TypeAr[i] = x.fieldType;
-            NameAr[i] = x.fieldName;
-            i++;
+            TypeAr[i] = itr2.next().fieldType;
+            NameAr[i++] = itr2.next().fieldName;
         }
-        return new TupleDesc(TypeAr, NameAr);
+        TupleDesc ans = new TupleDesc(TypeAr, NameAr);
+        return ans;
     }
 
     /**
